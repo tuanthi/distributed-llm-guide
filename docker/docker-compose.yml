@@ -1,0 +1,123 @@
+version: '3.8'
+
+services:
+  # Model serving service
+  model-server:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: serving
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../models:/app/models:ro
+      - ../logs:/app/logs
+    environment:
+      - MODEL_PATH=/app/models/trained-model
+      - DEVICE=cuda
+      - MAX_BATCH_SIZE=16
+      - OPTIMIZATION_LEVEL=O3
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Prometheus monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+
+  # Grafana dashboards
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    restart: unless-stopped
+
+  # Redis for caching
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+
+  # Training service (for distributed training)
+  trainer:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: training
+    volumes:
+      - ../data:/app/data
+      - ../models:/app/models
+      - ../logs:/app/logs
+      - ../checkpoints:/app/checkpoints
+    environment:
+      - WANDB_API_KEY=${WANDB_API_KEY}
+      - AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID}
+      - CUDA_VISIBLE_DEVICES=0,1,2,3
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: ["python", "examples/train_code_model.py", "--use_lora", "--num_epochs", "3"]
+    profiles:
+      - training
+
+  # Development environment
+  dev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: development
+    ports:
+      - "8888:8888"  # Jupyter
+      - "8080:8080"  # Additional dev server
+    volumes:
+      - ..:/app
+      - jupyter_data:/root/.jupyter
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    command: ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--allow-root", "--no-browser"]
+    profiles:
+      - development
+
+volumes:
+  prometheus_data:
+  grafana_data:
+  redis_data:
+  jupyter_data:

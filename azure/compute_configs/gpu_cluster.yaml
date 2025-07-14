@@ -1,0 +1,66 @@
+$schema: https://azuremlschemas.azureedge.net/latest/amlCompute.schema.json
+name: gpu-cluster-v100
+type: amlcompute
+
+# VM Configuration
+size: Standard_NC6s_v3  # 1x V100, 6 cores, 112GB RAM
+min_instances: 0
+max_instances: 8
+idle_time_before_scale_down: 120  # seconds
+
+# Networking
+subnet: default
+ssh_public_access_enabled: false
+
+# Additional settings
+tier: Dedicated
+description: "GPU cluster for distributed training with V100 GPUs"
+
+tags:
+  purpose: training
+  gpu_type: v100
+  framework: pytorch
+
+---
+$schema: https://azuremlschemas.azureedge.net/latest/amlCompute.schema.json
+name: gpu-cluster-a100
+type: amlcompute
+
+# VM Configuration for A100 GPUs
+size: Standard_NC24ads_A100_v4  # 1x A100, 24 cores, 220GB RAM
+min_instances: 0
+max_instances: 16
+idle_time_before_scale_down: 180
+
+# Networking
+subnet: default
+ssh_public_access_enabled: false
+
+# Additional settings
+tier: Dedicated
+description: "High-performance GPU cluster for large model training with A100 GPUs"
+
+tags:
+  purpose: training
+  gpu_type: a100
+  framework: pytorch
+  use_case: large_models
+
+---
+$schema: https://azuremlschemas.azureedge.net/latest/amlCompute.schema.json
+name: cpu-cluster
+type: amlcompute
+
+# CPU-only cluster for data processing
+size: Standard_D16s_v3  # 16 cores, 64GB RAM
+min_instances: 0
+max_instances: 20
+idle_time_before_scale_down: 300
+
+tier: Dedicated
+description: "CPU cluster for data preprocessing and lightweight training"
+
+tags:
+  purpose: data_processing
+  compute_type: cpu
+  use_case: preprocessing
