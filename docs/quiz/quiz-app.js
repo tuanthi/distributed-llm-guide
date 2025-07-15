@@ -571,7 +571,7 @@ class QuizApp {
         // Subject matter
         ctx.fillStyle = '#1a365d';
         ctx.font = 'bold 32px "Times New Roman", serif';
-        ctx.fillText('DISTRIBUTED LLM TRAINING & SERVING EXPERT', canvas.width / 2, 450);
+        ctx.fillText('DISTRIBUTED LLM TRAINING & SERVING IN PRODUCTION', canvas.width / 2, 450);
         
         // Score achievement
         const percentage = Math.round((this.score / this.randomizedQuestions.length) * 100);
@@ -940,7 +940,7 @@ class QuizApp {
     }
     
     shareCertificate(name, github, percentage) {
-        const text = `🎓 Proud to announce: I've earned an official Certificate of Excellence as a Distributed LLM Training & Serving Expert!
+        const text = `🎓 Proud to announce: I've earned an official Certificate of Excellence in Distributed LLM Training & Serving in Production!
 
 🏆 Achievement: ${percentage}% score on comprehensive LLM engineering assessment by Advanced Machine Learning for Production
 
@@ -959,7 +959,7 @@ This accredited certification validates my expertise in distributed LLM training
         
         if (navigator.share) {
             navigator.share({
-                title: 'Distributed LLM Training & Serving Expert Certificate',
+                title: 'Certificate: Distributed LLM Training & Serving in Production',
                 text: text,
                 url: 'https://tuanthi.github.io/distributed-llm-guide/quiz/'
             });
