@@ -6,6 +6,9 @@ class QuizApp {
         this.score = 0;
         this.startTime = null;
         this.endTime = null;
+        this.randomizedQuestions = [];
+        this.isAnswered = false;
+        this.hasShownFeedback = false;
         
         this.initializeApp();
     }
@@ -27,7 +30,11 @@ class QuizApp {
         });
         
         document.getElementById('nextBtn').addEventListener('click', () => {
-            this.nextQuestion();
+            if (this.isAnswered && !this.hasShownFeedback) {
+                this.showFeedback();
+            } else {
+                this.nextQuestion();
+            }
         });
         
         // Results screen buttons
@@ -44,17 +51,34 @@ class QuizApp {
         });
     }
     
+    shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+    
     startQuiz() {
         this.startTime = new Date();
         this.currentQuestion = 0;
-        this.userAnswers = new Array(quizData.length).fill(null);
+        
+        // Randomize questions
+        this.randomizedQuestions = this.shuffleArray([...quizData]);
+        this.userAnswers = new Array(this.randomizedQuestions.length).fill(null);
+        this.score = 0;
+        this.isAnswered = false;
+        this.hasShownFeedback = false;
+        
         this.showScreen('quizScreen');
         this.displayQuestion();
         this.updateProgress();
     }
     
     displayQuestion() {
-        const question = quizData[this.currentQuestion];
+        const question = this.randomizedQuestions[this.currentQuestion];
+        this.isAnswered = false;
+        this.hasShownFeedback = false;
         
         // Update question header
         document.getElementById('questionNumber').textContent = `Question ${this.currentQuestion + 1}`;
@@ -77,9 +101,15 @@ class QuizApp {
             codeBlock.classList.add('hidden');
         }
         
-        // Clear and populate answer options
+        // Clear answer options and feedback
         const answerContainer = document.getElementById('answerOptions');
         answerContainer.innerHTML = '';
+        
+        // Clear any existing feedback
+        const existingFeedback = document.getElementById('feedbackContainer');
+        if (existingFeedback) {
+            existingFeedback.remove();
+        }
         
         if (question.type === 'multiple-choice') {
             question.options.forEach((option, index) => {
@@ -93,8 +123,10 @@ class QuizApp {
                 
                 // Add click handler
                 optionDiv.addEventListener('click', () => {
-                    document.getElementById(`option${index}`).checked = true;
-                    this.selectAnswer(index);
+                    if (!this.hasShownFeedback) {
+                        document.getElementById(`option${index}`).checked = true;
+                        this.selectAnswer(index);
+                    }
                 });
             });
         } else {
@@ -102,13 +134,15 @@ class QuizApp {
             const inputDiv = document.createElement('div');
             inputDiv.className = 'answer-input';
             inputDiv.innerHTML = `
-                <textarea id="shortAnswer" placeholder="Enter your answer here..." rows="3"></textarea>
+                <textarea id="shortAnswer" placeholder="Enter your answer here..." rows="3" ${this.hasShownFeedback ? 'disabled' : ''}></textarea>
             `;
             answerContainer.appendChild(inputDiv);
             
             const textarea = document.getElementById('shortAnswer');
             textarea.addEventListener('input', () => {
-                this.selectAnswer(textarea.value.trim());
+                if (!this.hasShownFeedback) {
+                    this.selectAnswer(textarea.value.trim());
+                }
             });
         }
         
@@ -123,12 +157,13 @@ class QuizApp {
     
     selectAnswer(answer) {
         this.userAnswers[this.currentQuestion] = answer;
+        this.isAnswered = true;
         this.updateNavigationButtons();
     }
     
     restoreAnswer() {
         const answer = this.userAnswers[this.currentQuestion];
-        const question = quizData[this.currentQuestion];
+        const question = this.randomizedQuestions[this.currentQuestion];
         
         if (question.type === 'multiple-choice') {
             const radio = document.querySelector(`input[value="${answer}"]`);
@@ -146,16 +181,100 @@ class QuizApp {
         // Previous button
         prevBtn.disabled = this.currentQuestion === 0;
         
-        // Next button
+        // Next button logic
         const hasAnswer = this.userAnswers[this.currentQuestion] !== null;
-        nextBtn.disabled = !hasAnswer;
         
-        // Update next button text
-        if (this.currentQuestion === quizData.length - 1) {
-            nextBtn.innerHTML = hasAnswer ? 'Finish Quiz <i class="fas fa-flag-checkered"></i>' : 'Finish Quiz';
+        if (!this.isAnswered) {
+            nextBtn.disabled = true;
+            nextBtn.innerHTML = 'Select Answer First';
+        } else if (this.isAnswered && !this.hasShownFeedback) {
+            nextBtn.disabled = false;
+            nextBtn.innerHTML = 'Submit Answer <i class="fas fa-check"></i>';
         } else {
-            nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
+            nextBtn.disabled = false;
+            if (this.currentQuestion === this.randomizedQuestions.length - 1) {
+                nextBtn.innerHTML = 'Finish Quiz <i class="fas fa-flag-checkered"></i>';
+            } else {
+                nextBtn.innerHTML = 'Next Question <i class="fas fa-arrow-right"></i>';
+            }
         }
+    }
+    
+    showFeedback() {
+        const question = this.randomizedQuestions[this.currentQuestion];
+        const userAnswer = this.userAnswers[this.currentQuestion];
+        let isCorrect = false;
+        let userAnswerText = '';
+        let correctAnswerText = '';
+        
+        // Check if answer is correct
+        if (question.type === 'multiple-choice') {
+            isCorrect = userAnswer === question.correct;
+            userAnswerText = question.options[userAnswer];
+            correctAnswerText = question.options[question.correct];
+        } else {
+            const userAnswerNorm = String(userAnswer).toLowerCase().trim();
+            const correctAnswerNorm = String(question.correct).toLowerCase().trim();
+            isCorrect = userAnswerNorm === correctAnswerNorm;
+            userAnswerText = userAnswer;
+            correctAnswerText = question.correct;
+        }
+        
+        // Update score immediately
+        if (isCorrect) {
+            this.score++;
+        }
+        
+        // Mark options as correct/incorrect for multiple choice
+        if (question.type === 'multiple-choice') {
+            document.querySelectorAll('.answer-option').forEach((option, index) => {
+                option.style.pointerEvents = 'none';
+                if (index === question.correct) {
+                    option.classList.add('feedback-correct');
+                } else if (index === userAnswer) {
+                    option.classList.add('feedback-incorrect');
+                } else {
+                    option.classList.add('feedback-neutral');
+                }
+            });
+        } else {
+            document.getElementById('shortAnswer').disabled = true;
+        }
+        
+        // Create feedback container
+        const feedbackContainer = document.createElement('div');
+        feedbackContainer.id = 'feedbackContainer';
+        feedbackContainer.className = `feedback-container ${isCorrect ? 'feedback-correct-bg' : 'feedback-incorrect-bg'}`;
+        
+        feedbackContainer.innerHTML = `
+            <div class="feedback-header">
+                <span class="feedback-icon">
+                    <i class="fas fa-${isCorrect ? 'check-circle' : 'times-circle'}"></i>
+                </span>
+                <span class="feedback-title">${isCorrect ? 'Correct!' : 'Incorrect'}</span>
+                <span class="current-score">Score: ${this.score}/${this.currentQuestion + 1}</span>
+            </div>
+            
+            ${!isCorrect ? `
+                <div class="feedback-answer">
+                    <strong>Your answer:</strong> ${userAnswerText}<br>
+                    <strong>Correct answer:</strong> ${correctAnswerText}
+                </div>
+            ` : ''}
+            
+            <div class="feedback-explanation">
+                <strong>Explanation:</strong>
+                <p>${question.explanation}</p>
+            </div>
+        `;
+        
+        // Insert feedback after answer options
+        const answerContainer = document.getElementById('answerOptions');
+        answerContainer.parentNode.insertBefore(feedbackContainer, answerContainer.nextSibling);
+        
+        this.hasShownFeedback = true;
+        this.updateNavigationButtons();
+        this.updateProgress(); // Update progress with current score
     }
     
     previousQuestion() {
@@ -167,7 +286,7 @@ class QuizApp {
     }
     
     nextQuestion() {
-        if (this.currentQuestion < quizData.length - 1) {
+        if (this.currentQuestion < this.randomizedQuestions.length - 1) {
             this.currentQuestion++;
             this.displayQuestion();
             this.updateProgress();
@@ -177,37 +296,17 @@ class QuizApp {
     }
     
     updateProgress() {
-        const progress = ((this.currentQuestion + 1) / quizData.length) * 100;
+        const progress = ((this.currentQuestion + 1) / this.randomizedQuestions.length) * 100;
         document.getElementById('progressFill').style.width = `${progress}%`;
         document.getElementById('progressText').textContent = 
-            `Question ${this.currentQuestion + 1} of ${quizData.length}`;
+            `Question ${this.currentQuestion + 1} of ${this.randomizedQuestions.length} | Score: ${this.score}/${this.currentQuestion + (this.hasShownFeedback ? 1 : 0)}`;
     }
     
     finishQuiz() {
         this.endTime = new Date();
-        this.calculateScore();
+        // Score is already calculated during feedback, no need to recalculate
         this.showResults();
         this.showScreen('resultsScreen');
-    }
-    
-    calculateScore() {
-        this.score = 0;
-        
-        this.userAnswers.forEach((userAnswer, index) => {
-            const question = quizData[index];
-            let isCorrect = false;
-            
-            if (question.type === 'multiple-choice') {
-                isCorrect = userAnswer === question.correct;
-            } else {
-                // Short answer - normalize and check
-                const userAnswerNorm = String(userAnswer).toLowerCase().trim();
-                const correctAnswerNorm = String(question.correct).toLowerCase().trim();
-                isCorrect = userAnswerNorm === correctAnswerNorm;
-            }
-            
-            if (isCorrect) this.score++;
-        });
     }
     
     showResults() {
@@ -215,7 +314,7 @@ class QuizApp {
         document.getElementById('finalScore').textContent = this.score;
         
         // Update score message
-        const percentage = (this.score / quizData.length) * 100;
+        const percentage = (this.score / this.randomizedQuestions.length) * 100;
         const scoreTitle = document.getElementById('scoreTitle');
         const scoreMessage = document.getElementById('scoreMessage');
         
@@ -244,7 +343,7 @@ class QuizApp {
         const breakdown = {};
         
         // Group questions by category
-        quizData.forEach((question, index) => {
+        this.randomizedQuestions.forEach((question, index) => {
             const category = question.category;
             if (!breakdown[category]) {
                 breakdown[category] = { correct: 0, total: 0 };
@@ -293,7 +392,7 @@ class QuizApp {
         const reviewContent = document.getElementById('reviewContent');
         reviewContent.innerHTML = '';
         
-        quizData.forEach((question, index) => {
+        this.randomizedQuestions.forEach((question, index) => {
             const userAnswer = this.userAnswers[index];
             let isCorrect = false;
             let userAnswerText = '';
@@ -358,6 +457,9 @@ class QuizApp {
         this.score = 0;
         this.startTime = null;
         this.endTime = null;
+        this.randomizedQuestions = [];
+        this.isAnswered = false;
+        this.hasShownFeedback = false;
         this.showScreen('welcomeScreen');
     }
     
