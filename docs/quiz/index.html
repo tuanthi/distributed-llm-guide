@@ -99,6 +99,9 @@
                     </div>
 
                     <div class="results-actions">
+                        <button id="getCertificate" class="btn btn-success" style="display: none;">
+                            <i class="fas fa-award"></i> Get Certificate
+                        </button>
                         <button id="reviewAnswers" class="btn btn-secondary">
                             <i class="fas fa-eye"></i> Review Answers
                         </button>
@@ -122,6 +125,72 @@
                 </div>
                 <div id="reviewContent" class="review-content">
                     <!-- Review content will be generated -->
+                </div>
+            </div>
+
+            <!-- Certificate Form Screen -->
+            <div id="certificateScreen" class="screen">
+                <div class="certificate-form-card">
+                    <div class="certificate-header">
+                        <h2><i class="fas fa-award"></i> Congratulations! Get Your Certificate</h2>
+                        <p class="certificate-subtitle">You've achieved 85%+ and earned a Production ML Engineering Certificate!</p>
+                    </div>
+                    
+                    <div class="certificate-form">
+                        <div class="form-group">
+                            <label for="certificateName">Full Name</label>
+                            <input type="text" id="certificateName" placeholder="Enter your full name" maxlength="50">
+                            <small>This will appear on your certificate</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="certificateGithub">GitHub Username</label>
+                            <div class="github-input">
+                                <span class="github-prefix">@</span>
+                                <input type="text" id="certificateGithub" placeholder="your-github-username" maxlength="39">
+                            </div>
+                            <small>Your GitHub profile will be linked on the certificate</small>
+                        </div>
+                        
+                        <div class="certificate-preview">
+                            <h4>Your certificate will include:</h4>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Your name and GitHub profile</li>
+                                <li><i class="fas fa-check"></i> Your quiz score and completion date</li>
+                                <li><i class="fas fa-check"></i> Skills validation (Distributed Training, PEFT, Optimization)</li>
+                                <li><i class="fas fa-check"></i> Professional design suitable for LinkedIn and resumes</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="certificate-actions">
+                            <button id="generateCertificate" class="btn btn-primary" disabled>
+                                <i class="fas fa-magic"></i> Generate Certificate
+                            </button>
+                            <button id="backToResultsFromCert" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Results
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certificate Display Screen -->
+            <div id="certificateDisplayScreen" class="screen">
+                <div class="certificate-display-card">
+                    <div class="certificate-display-header">
+                        <h2><i class="fas fa-trophy"></i> Your Production ML Engineering Certificate</h2>
+                        <p>Share your achievement with the world!</p>
+                    </div>
+                    
+                    <div id="certificateDisplay" class="certificate-display">
+                        <!-- Certificate canvas and actions will be generated here -->
+                    </div>
+                    
+                    <div class="certificate-footer-actions">
+                        <button id="backToResultsFromDisplay" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Results
+                        </button>
+                    </div>
                 </div>
             </div>
         </main>

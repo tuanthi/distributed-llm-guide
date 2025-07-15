@@ -336,6 +336,17 @@ body {
     color: white;
 }
 
+.btn-success {
+    background: var(--success-color);
+    color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+    background: #047857;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+}
+
 .btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -640,6 +651,164 @@ body {
     color: var(--text-primary);
 }
 
+/* Certificate Screens */
+.certificate-form-card, .certificate-display-card {
+    background: var(--surface);
+    border-radius: var(--border-radius);
+    padding: 40px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.certificate-header, .certificate-display-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.certificate-header h2, .certificate-display-header h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, var(--success-color), #059669);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.certificate-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.certificate-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-family: var(--font-family);
+    transition: border-color 0.2s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.github-input {
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: border-color 0.2s ease;
+    overflow: hidden;
+}
+
+.github-input:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.github-prefix {
+    background: var(--background);
+    padding: 12px 16px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    border-right: 1px solid var(--border-color);
+}
+
+.github-input input {
+    border: none;
+    box-shadow: none;
+    flex: 1;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.certificate-preview {
+    background: var(--background);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    margin: 25px 0;
+}
+
+.certificate-preview h4 {
+    margin-bottom: 15px;
+    color: var(--text-primary);
+}
+
+.certificate-preview ul {
+    list-style: none;
+    padding: 0;
+}
+
+.certificate-preview li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+.certificate-preview li i {
+    color: var(--success-color);
+    font-size: 0.9rem;
+}
+
+.certificate-actions, .certificate-footer-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+/* Certificate Display */
+.certificate-display {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.certificate-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.certificate-display canvas {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 25px;
+}
+
 /* Footer */
 .quiz-footer {
     text-align: center;
@@ -697,6 +866,29 @@ body {
     
     .quiz-info {
         grid-template-columns: 1fr;
+    }
+    
+    .certificate-form-card, .certificate-display-card {
+        padding: 25px;
+    }
+    
+    .certificate-header h2, .certificate-display-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .certificate-actions, .certificate-footer-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .github-input {
+        flex-direction: column;
+    }
+    
+    .github-prefix {
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        text-align: center;
     }
 }
 

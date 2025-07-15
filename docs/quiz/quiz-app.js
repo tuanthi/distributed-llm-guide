@@ -49,6 +49,26 @@ class QuizApp {
         document.getElementById('backToResults').addEventListener('click', () => {
             this.showScreen('resultsScreen');
         });
+        
+        // Certificate button
+        document.getElementById('getCertificate').addEventListener('click', () => {
+            this.showCertificateForm();
+        });
+        
+        // Generate certificate button
+        document.getElementById('generateCertificate').addEventListener('click', () => {
+            this.generateCertificate();
+        });
+        
+        // Back to results from certificate
+        document.getElementById('backToResultsFromCert').addEventListener('click', () => {
+            this.showScreen('resultsScreen');
+        });
+        
+        // Back to results from certificate display
+        document.getElementById('backToResultsFromDisplay').addEventListener('click', () => {
+            this.showScreen('resultsScreen');
+        });
     }
     
     shuffleArray(array) {
@@ -337,6 +357,14 @@ class QuizApp {
         
         // Generate breakdown by category
         this.generateResultsBreakdown();
+        
+        // Show/hide certificate button based on score
+        const getCertificateBtn = document.getElementById('getCertificate');
+        if (percentage >= 85) {
+            getCertificateBtn.style.display = 'inline-flex';
+        } else {
+            getCertificateBtn.style.display = 'none';
+        }
     }
     
     generateResultsBreakdown() {
@@ -449,6 +477,281 @@ class QuizApp {
         if (typeof Prism !== 'undefined') {
             Prism.highlightAll();
         }
+    }
+    
+    showCertificateForm() {
+        this.showScreen('certificateScreen');
+        // Clear form
+        document.getElementById('certificateName').value = '';
+        document.getElementById('certificateGithub').value = '';
+        document.getElementById('generateCertificate').disabled = true;
+        
+        // Add input validation
+        const nameInput = document.getElementById('certificateName');
+        const githubInput = document.getElementById('certificateGithub');
+        
+        const validateForm = () => {
+            const hasName = nameInput.value.trim().length > 0;
+            const hasGithub = githubInput.value.trim().length > 0;
+            document.getElementById('generateCertificate').disabled = !(hasName && hasGithub);
+        };
+        
+        nameInput.addEventListener('input', validateForm);
+        githubInput.addEventListener('input', validateForm);
+    }
+    
+    generateCertificate() {
+        const name = document.getElementById('certificateName').value.trim();
+        const github = document.getElementById('certificateGithub').value.trim();
+        
+        if (!name || !github) {
+            alert('Please fill in all fields');
+            return;
+        }
+        
+        // Create certificate canvas
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size (standard certificate dimensions)
+        canvas.width = 1200;
+        canvas.height = 900;
+        
+        // Create gradient background
+        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        gradient.addColorStop(0, '#1e3a8a');
+        gradient.addColorStop(0.5, '#3b82f6');
+        gradient.addColorStop(1, '#1e40af');
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Add border
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 12;
+        ctx.strokeRect(30, 30, canvas.width - 60, canvas.height - 60);
+        
+        // Inner border
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(50, 50, canvas.width - 100, canvas.height - 100);
+        
+        // Certificate title
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 48px Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('CERTIFICATE OF ACHIEVEMENT', canvas.width / 2, 150);
+        
+        // Subtitle
+        ctx.font = '24px Arial, sans-serif';
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillText('Production ML Engineering Excellence', canvas.width / 2, 190);
+        
+        // Main text
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '32px Arial, sans-serif';
+        ctx.fillText('This certifies that', canvas.width / 2, 280);
+        
+        // Name
+        ctx.font = 'bold 42px Arial, sans-serif';
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillText(name, canvas.width / 2, 340);
+        
+        // Achievement text
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '28px Arial, sans-serif';
+        ctx.fillText('has successfully demonstrated mastery of', canvas.width / 2, 400);
+        ctx.fillText('Production ML Engineering concepts by achieving', canvas.width / 2, 440);
+        
+        // Score
+        const percentage = Math.round((this.score / this.randomizedQuestions.length) * 100);
+        ctx.font = 'bold 36px Arial, sans-serif';
+        ctx.fillStyle = '#10b981';
+        ctx.fillText(`${percentage}% (${this.score}/${this.randomizedQuestions.length}) on the comprehensive quiz`, canvas.width / 2, 490);
+        
+        // Skills covered
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '22px Arial, sans-serif';
+        ctx.fillText('Covering: Distributed Training • PEFT Techniques • Model Optimization • Architecture Design', canvas.width / 2, 550);
+        
+        // GitHub handle
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = 'bold 24px Arial, sans-serif';
+        ctx.fillText(`GitHub: @${github}`, canvas.width / 2, 600);
+        
+        // Date
+        const date = new Date().toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        ctx.fillStyle = '#cbd5e1';
+        ctx.font = '20px Arial, sans-serif';
+        ctx.fillText(`Completed on ${date}`, canvas.width / 2, 660);
+        
+        // Footer
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '18px Arial, sans-serif';
+        ctx.fillText('Production ML Engineering Handbook', canvas.width / 2, 720);
+        ctx.fillText('github.com/tuanthi/distributed-llm-guide', canvas.width / 2, 750);
+        
+        // Add decorative elements
+        this.addCertificateDecorations(ctx, canvas.width, canvas.height);
+        
+        // Display certificate
+        this.displayCertificate(canvas, name, github, percentage);
+    }
+    
+    addCertificateDecorations(ctx, width, height) {
+        // Add some decorative stars
+        ctx.fillStyle = '#fbbf24';
+        const starPositions = [
+            [200, 120], [1000, 120], [150, 300], [1050, 300],
+            [180, 500], [1020, 500], [220, 700], [980, 700]
+        ];
+        
+        starPositions.forEach(([x, y]) => {
+            this.drawStar(ctx, x, y, 15);
+        });
+        
+        // Add ML icons (simplified representations)
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 3;
+        
+        // Neural network representation
+        const nodePositions = [
+            [120, 400], [120, 450], [120, 500],
+            [1080, 400], [1080, 450], [1080, 500]
+        ];
+        
+        nodePositions.forEach(([x, y]) => {
+            ctx.beginPath();
+            ctx.arc(x, y, 8, 0, 2 * Math.PI);
+            ctx.stroke();
+        });
+    }
+    
+    drawStar(ctx, x, y, size) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.beginPath();
+        
+        for (let i = 0; i < 5; i++) {
+            ctx.lineTo(Math.cos((18 + i * 72) * Math.PI / 180) * size, 
+                      -Math.sin((18 + i * 72) * Math.PI / 180) * size);
+            ctx.lineTo(Math.cos((54 + i * 72) * Math.PI / 180) * size * 0.5, 
+                      -Math.sin((54 + i * 72) * Math.PI / 180) * size * 0.5);
+        }
+        
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    }
+    
+    displayCertificate(canvas, name, github, percentage) {
+        const certificateContainer = document.getElementById('certificateDisplay');
+        certificateContainer.innerHTML = '';
+        
+        // Add canvas to display
+        canvas.style.maxWidth = '100%';
+        canvas.style.height = 'auto';
+        canvas.style.border = '2px solid #e2e8f0';
+        canvas.style.borderRadius = '8px';
+        canvas.style.boxShadow = '0 10px 15px -3px rgb(0 0 0 / 0.1)';
+        
+        certificateContainer.appendChild(canvas);
+        
+        // Add action buttons
+        const actionContainer = document.createElement('div');
+        actionContainer.className = 'certificate-actions';
+        actionContainer.innerHTML = `
+            <button id="downloadCertificate" class="btn btn-primary">
+                <i class="fas fa-download"></i> Download Certificate
+            </button>
+            <button id="shareCertificate" class="btn btn-secondary">
+                <i class="fas fa-share"></i> Share on Social Media
+            </button>
+            <button id="copyShareLink" class="btn btn-outline">
+                <i class="fas fa-link"></i> Copy Share Link
+            </button>
+        `;
+        
+        certificateContainer.appendChild(actionContainer);
+        
+        // Bind action events
+        document.getElementById('downloadCertificate').addEventListener('click', () => {
+            this.downloadCertificate(canvas, name);
+        });
+        
+        document.getElementById('shareCertificate').addEventListener('click', () => {
+            this.shareCertificate(name, github, percentage);
+        });
+        
+        document.getElementById('copyShareLink').addEventListener('click', () => {
+            this.copyShareLink(name, github, percentage);
+        });
+        
+        // Show certificate display
+        this.showScreen('certificateDisplayScreen');
+    }
+    
+    downloadCertificate(canvas, name) {
+        // Convert canvas to blob and download
+        canvas.toBlob((blob) => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Production-ML-Engineering-Certificate-${name.replace(/\s+/g, '-')}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, 'image/png');
+    }
+    
+    shareCertificate(name, github, percentage) {
+        const text = `🎉 I just earned a Production ML Engineering Certificate with ${percentage}% on the comprehensive quiz! 
+
+Skills validated:
+✅ Distributed Training (DDP, FSDP)
+✅ PEFT Techniques (LoRA, QLoRA)
+✅ Model Optimization
+✅ MLOps Architecture
+
+Check out the handbook: https://tuanthi.github.io/distributed-llm-guide/
+Take the quiz: https://tuanthi.github.io/distributed-llm-guide/quiz/
+
+#MachineLearning #MLOps #AI #ProductionML #DistributedTraining`;
+        
+        if (navigator.share) {
+            navigator.share({
+                title: 'Production ML Engineering Certificate',
+                text: text,
+                url: 'https://tuanthi.github.io/distributed-llm-guide/quiz/'
+            });
+        } else {
+            // Fallback - copy to clipboard
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Share text copied to clipboard! You can paste it on your social media.');
+            });
+        }
+    }
+    
+    copyShareLink(name, github, percentage) {
+        const url = `https://tuanthi.github.io/distributed-llm-guide/quiz/?shared=true&score=${percentage}&name=${encodeURIComponent(name)}&github=${encodeURIComponent(github)}`;
+        
+        navigator.clipboard.writeText(url).then(() => {
+            alert('Share link copied to clipboard!');
+        }).catch(() => {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = url;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Share link copied to clipboard!');
+        });
     }
     
     resetQuiz() {
