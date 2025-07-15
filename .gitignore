@@ -1,0 +1,456 @@
+# Production ML Engineering - .gitignore
+
+# ============================================================================
+# Python
+# ============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+.pdm.toml
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# ============================================================================
+# Machine Learning & Data Science
+# ============================================================================
+
+# Models and checkpoints
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.joblib
+*.pth
+*.pt
+*.ckpt
+*.pb
+*.tflite
+*.onnx
+*.safetensors
+checkpoints/
+saved_models/
+model_outputs/
+models/
+outputs/
+wandb/
+mlruns/
+.mlflow/
+
+# Data files
+*.csv
+*.tsv
+*.parquet
+*.feather
+*.arrow
+*.hdf
+*.h5
+*.json
+*.jsonl
+*.ndjson
+*.xml
+*.xlsx
+*.xls
+*.db
+*.sqlite
+*.sqlite3
+data/
+datasets/
+raw_data/
+processed_data/
+cache/
+tmp_data/
+
+# Large media files
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.svg
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.mp3
+*.wav
+*.flac
+*.aac
+
+# Logs and metrics
+logs/
+tensorboard/
+runs/
+lightning_logs/
+*.log
+*.out
+*.err
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+.temp/
+
+# ============================================================================
+# Development & IDE
+# ============================================================================
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ============================================================================
+# Docker & Containers
+# ============================================================================
+Dockerfile.dev
+docker-compose.override.yml
+.dockerignore
+
+# ============================================================================
+# Cloud & Infrastructure
+# ============================================================================
+
+# Azure
+.azure/
+azure.conf
+
+# AWS
+.aws/
+aws.conf
+
+# GCP
+.gcp/
+gcp.conf
+*.json # GCP service account keys
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+terraform.tfvars.json
+
+# Kubernetes
+*.kubeconfig
+
+# ============================================================================
+# Monitoring & Observability
+# ============================================================================
+prometheus/data/
+grafana/data/
+.prometheus/
+.grafana/
+
+# ============================================================================
+# ML Experiment Tracking
+# ============================================================================
+
+# Weights & Biases
+wandb/
+.wandb/
+
+# MLflow
+mlruns/
+.mlflow/
+mlflow.db
+
+# TensorBoard
+runs/
+tensorboard/
+.tensorboard/
+
+# Neptune
+.neptune/
+
+# ClearML
+.clearml/
+
+# Comet ML
+.comet/
+
+# ============================================================================
+# Distributed Training
+# ============================================================================
+
+# DeepSpeed
+.deepspeed/
+deepspeed_config.json
+
+# PyTorch distributed
+*.pth.tar
+dist_checkpoint/
+
+# NCCL
+nccl_*.log
+
+# ============================================================================
+# Model Serving & Deployment
+# ============================================================================
+
+# Model artifacts
+artifacts/
+deployments/
+inference_cache/
+model_cache/
+
+# API keys and secrets
+.secrets
+secrets/
+*.key
+*.pem
+*.p12
+*.pfx
+
+# ============================================================================
+# Performance & Profiling
+# ============================================================================
+
+# Profiling results
+*.prof
+*.profile
+profiling/
+.profiling/
+
+# Memory profiling
+*.mprofile
+memory_profiler/
+
+# ============================================================================
+# Build & Package Management
+# ============================================================================
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Package management
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============================================================================
+# Documentation
+# ============================================================================
+
+# Generated docs
+docs/_build/
+docs/build/
+site/
+
+# ============================================================================
+# CI/CD
+# ============================================================================
+
+# GitHub Actions
+.github/workflows/secrets/
+
+# Local CI/CD configs
+.ci/
+.cd/
+
+# ============================================================================
+# Security
+# ============================================================================
+
+# Secrets and keys
+*.env
+.env.*
+config.ini
+settings.ini
+secrets.yaml
+secrets.yml
+credentials.json
+*.credentials
+
+# Certificates
+*.crt
+*.cert
+*.ca-bundle
+*.p7b
+*.p7s
+*.spc
+
+# ============================================================================
+# Project Specific
+# ============================================================================
+
+# Training outputs
+training_outputs/
+fine_tuned_models/
+lora_weights/
+adapters/
+
+# Evaluation results
+evaluation_results/
+benchmarks/results/
+
+# Demo and example outputs
+demo_output/
+example_outputs/
+
+# Local configuration
+local_config.yaml
+local_settings.py
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Development databases
+*.db-journal
+dev.db
+test.db
+
+# ============================================================================
+# Performance Testing
+# ============================================================================
+performance_results/
+load_test_results/
+benchmark_outputs/
+
+# ============================================================================
+# End of .gitignore
+# ============================================================================
