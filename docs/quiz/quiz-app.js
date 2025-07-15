@@ -9,12 +9,30 @@ class QuizApp {
         this.randomizedQuestions = [];
         this.isAnswered = false;
         this.hasShownFeedback = false;
+        this.SAVE_KEY = 'mlQuizProgress';
+        this.autoSaveInterval = null;
         
         this.initializeApp();
     }
     
     initializeApp() {
         this.bindEvents();
+        
+        // Check for saved progress
+        if (this.loadProgress()) {
+            const resumeQuiz = confirm('You have a quiz in progress. Would you like to resume where you left off?');
+            if (resumeQuiz) {
+                this.showScreen('quizScreen');
+                this.displayQuestion();
+                this.updateProgress();
+                // Start auto-save
+                this.autoSaveInterval = setInterval(() => this.saveProgress(), 30000); // Save every 30 seconds
+                return;
+            } else {
+                this.clearProgress();
+            }
+        }
+        
         this.showScreen('welcomeScreen');
     }
     
@@ -69,6 +87,16 @@ class QuizApp {
         document.getElementById('backToResultsFromDisplay').addEventListener('click', () => {
             this.showScreen('resultsScreen');
         });
+        
+        // Question jump dropdown
+        document.getElementById('questionJump').addEventListener('change', (e) => {
+            const targetQuestion = parseInt(e.target.value);
+            if (!isNaN(targetQuestion) && targetQuestion >= 0 && targetQuestion < this.randomizedQuestions.length) {
+                this.currentQuestion = targetQuestion;
+                this.displayQuestion();
+                this.updateProgress();
+            }
+        });
     }
     
     shuffleArray(array) {
@@ -79,7 +107,55 @@ class QuizApp {
         return array;
     }
     
+    saveProgress() {
+        const progress = {
+            currentQuestion: this.currentQuestion,
+            userAnswers: this.userAnswers,
+            score: this.score,
+            startTime: this.startTime,
+            randomizedQuestions: this.randomizedQuestions.map(q => q.id),
+            hasShownFeedback: this.hasShownFeedback,
+            isAnswered: this.isAnswered
+        };
+        localStorage.setItem(this.SAVE_KEY, JSON.stringify(progress));
+    }
+    
+    loadProgress() {
+        const saved = localStorage.getItem(this.SAVE_KEY);
+        if (saved) {
+            try {
+                const progress = JSON.parse(saved);
+                // Reconstruct randomized questions from saved IDs
+                const questionMap = {};
+                quizData.forEach(q => questionMap[q.id] = q);
+                this.randomizedQuestions = progress.randomizedQuestions.map(id => questionMap[id]);
+                
+                this.currentQuestion = progress.currentQuestion;
+                this.userAnswers = progress.userAnswers;
+                this.score = progress.score;
+                this.startTime = new Date(progress.startTime);
+                this.hasShownFeedback = progress.hasShownFeedback;
+                this.isAnswered = progress.isAnswered;
+                
+                return true;
+            } catch (e) {
+                console.error('Failed to load progress:', e);
+                localStorage.removeItem(this.SAVE_KEY);
+            }
+        }
+        return false;
+    }
+    
+    clearProgress() {
+        localStorage.removeItem(this.SAVE_KEY);
+        if (this.autoSaveInterval) {
+            clearInterval(this.autoSaveInterval);
+            this.autoSaveInterval = null;
+        }
+    }
+    
     startQuiz() {
+        this.clearProgress(); // Clear any existing progress
         this.startTime = new Date();
         this.currentQuestion = 0;
         
@@ -90,9 +166,44 @@ class QuizApp {
         this.isAnswered = false;
         this.hasShownFeedback = false;
         
+        // Start auto-save
+        this.autoSaveInterval = setInterval(() => this.saveProgress(), 30000); // Save every 30 seconds
+        
+        // Populate question jump dropdown
+        this.populateQuestionJumpDropdown();
+        
         this.showScreen('quizScreen');
         this.displayQuestion();
         this.updateProgress();
+    }
+    
+    populateQuestionJumpDropdown() {
+        const dropdown = document.getElementById('questionJump');
+        dropdown.innerHTML = '<option value="">Jump to...</option>';
+        
+        // Group questions by category
+        const categories = {};
+        this.randomizedQuestions.forEach((q, index) => {
+            if (!categories[q.category]) {
+                categories[q.category] = [];
+            }
+            categories[q.category].push({ question: q, index: index });
+        });
+        
+        // Add options grouped by category
+        Object.keys(categories).forEach(category => {
+            const optgroup = document.createElement('optgroup');
+            optgroup.label = category;
+            
+            categories[category].forEach(({ question, index }) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `Q${index + 1}: ${question.question.substring(0, 50)}...`;
+                optgroup.appendChild(option);
+            });
+            
+            dropdown.appendChild(optgroup);
+        });
     }
     
     displayQuestion() {
@@ -104,6 +215,9 @@ class QuizApp {
         document.getElementById('questionNumber').textContent = `Question ${this.currentQuestion + 1}`;
         document.getElementById('questionType').textContent = 
             question.type === 'multiple-choice' ? 'Multiple Choice' : 'Short Answer';
+        
+        // Update dropdown selection
+        document.getElementById('questionJump').value = this.currentQuestion;
         
         // Update question content
         document.getElementById('questionText').textContent = question.question;
@@ -295,6 +409,23 @@ class QuizApp {
         this.hasShownFeedback = true;
         this.updateNavigationButtons();
         this.updateProgress(); // Update progress with current score
+        this.saveProgress(); // Save progress after showing feedback
+        this.updateQuestionDropdown(); // Update dropdown to show answered status
+    }
+    
+    updateQuestionDropdown() {
+        const dropdown = document.getElementById('questionJump');
+        const options = dropdown.querySelectorAll('option[value]');
+        
+        options.forEach(option => {
+            const index = parseInt(option.value);
+            if (!isNaN(index) && this.userAnswers[index] !== null) {
+                option.classList.add('answered');
+                // Update text to show answered status
+                const baseText = option.textContent.replace(' ✓', '');
+                option.textContent = baseText + ' ✓';
+            }
+        });
     }
     
     previousQuestion() {
@@ -324,6 +455,7 @@ class QuizApp {
     
     finishQuiz() {
         this.endTime = new Date();
+        this.clearProgress(); // Clear saved progress when quiz is finished
         // Score is already calculated during feedback, no need to recalculate
         this.showResults();
         this.showScreen('resultsScreen');

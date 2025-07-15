@@ -17,7 +17,7 @@
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
-                <span class="progress-text" id="progressText">Question 1 of 10</span>
+                <span class="progress-text" id="progressText">Question 1 of 100</span>
             </div>
         </header>
 
@@ -29,11 +29,15 @@
                     <div class="quiz-info">
                         <div class="info-item">
                             <i class="fas fa-question-circle"></i>
-                            <span><strong>10 Questions</strong> covering distributed training, PEFT, and optimization</span>
+                            <span><strong>100 Questions</strong> covering all aspects of production ML engineering</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-list-alt"></i>
+                            <span><strong>7 Categories</strong> - Environment Setup, Distributed Training, PEFT, Optimization, Architecture, Deployment, Monitoring</span>
                         </div>
                         <div class="info-item">
                             <i class="fas fa-clock"></i>
-                            <span><strong>No time limit</strong> - take your time to think</span>
+                            <span><strong>60-90 minutes</strong> estimated completion time (no time limit)</span>
                         </div>
                         <div class="info-item">
                             <i class="fas fa-lightbulb"></i>
@@ -42,6 +46,10 @@
                         <div class="info-item">
                             <i class="fas fa-code"></i>
                             <span><strong>Mix of concepts and code</strong> from the handbook</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-award"></i>
+                            <span><strong>Certificate of Excellence</strong> for scoring 85% or higher</span>
                         </div>
                     </div>
                     <button id="startQuiz" class="btn btn-primary">
@@ -72,6 +80,11 @@
                         <button id="prevBtn" class="btn btn-secondary" disabled>
                             <i class="fas fa-arrow-left"></i> Previous
                         </button>
+                        <div class="question-jump">
+                            <select id="questionJump" class="question-select">
+                                <option value="">Jump to...</option>
+                            </select>
+                        </div>
                         <button id="nextBtn" class="btn btn-primary" disabled>
                             Next <i class="fas fa-arrow-right"></i>
                         </button>
@@ -85,7 +98,7 @@
                     <div class="score-display">
                         <div class="score-circle">
                             <span class="score-number" id="finalScore">8</span>
-                            <span class="score-total">/10</span>
+                            <span class="score-total">/100</span>
                         </div>
                         <h2 id="scoreTitle">Excellent Work!</h2>
                         <p id="scoreMessage">You have a solid understanding of production ML engineering.</p>
