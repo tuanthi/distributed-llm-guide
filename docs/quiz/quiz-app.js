@@ -680,12 +680,12 @@ class QuizApp {
         ctx.fillStyle = '#1a365d';
         ctx.font = 'bold 28px "Times New Roman", serif';
         ctx.textAlign = 'center';
-        ctx.fillText('INSTITUTE OF ADVANCED MACHINE LEARNING', width / 2, 80);
+        ctx.fillText('ADVANCED MACHINE LEARNING FOR PRODUCTION', width / 2, 80);
         
         // Subtitle
         ctx.fillStyle = '#6b7280';
         ctx.font = 'italic 18px "Times New Roman", serif';
-        ctx.fillText('Center for Production AI Excellence', width / 2, 105);
+        ctx.fillText('Excellence in Production AI Engineering', width / 2, 105);
         
         // Decorative emblems
         this.drawAcademicEmblem(ctx, width / 2 - 250, 85);
@@ -779,7 +779,7 @@ class QuizApp {
         // Signature lines and titles
         const sigY = y + 70;
         
-        // Director signature
+        // Authority signature
         ctx.textAlign = 'center';
         ctx.font = '16px "Times New Roman", serif';
         ctx.fillStyle = '#6b7280';
@@ -792,14 +792,14 @@ class QuizApp {
         ctx.lineTo(width - 200, sigY);
         ctx.stroke();
         
-        ctx.fillText('Dr. Alexandra Chen', width - 300, sigY + 20);
-        ctx.fillText('Director, Institute of Advanced ML', width - 300, sigY + 40);
+        ctx.fillText('Assessment Authority', width - 300, sigY + 20);
+        ctx.fillText('Advanced ML for Production', width - 300, sigY + 40);
         
         // Authentication number
         ctx.textAlign = 'left';
         ctx.font = '14px "Times New Roman", serif';
         ctx.fillStyle = '#9ca3af';
-        const certNumber = `IAML-${Date.now().toString(36).toUpperCase()}`;
+        const certNumber = `AMLP-${Date.now().toString(36).toUpperCase()}`;
         ctx.fillText(`Certificate No: ${certNumber}`, 150, sigY + 40);
     }
     
@@ -809,7 +809,7 @@ class QuizApp {
         ctx.textAlign = 'center';
         
         ctx.fillText('This certificate validates demonstrated competency in advanced machine learning engineering', width / 2, height - 80);
-        ctx.fillText('as assessed by the Institute of Advanced Machine Learning curriculum standards', width / 2, height - 60);
+        ctx.fillText('as assessed by the Advanced Machine Learning for Production curriculum standards', width / 2, height - 60);
         
         // Website
         ctx.fillStyle = '#9ca3af';
@@ -936,7 +936,7 @@ class QuizApp {
     }
     
     shareCertificate(name, github, percentage) {
-        const text = `🎓 Proud to announce: I've earned an official Certificate of Excellence from the Institute of Advanced Machine Learning!
+        const text = `🎓 Proud to announce: I've earned an official Certificate of Excellence from Advanced Machine Learning for Production!
 
 🏆 Achievement: ${percentage}% score on comprehensive Production ML Engineering assessment
 
