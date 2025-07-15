@@ -513,138 +513,364 @@ class QuizApp {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         
-        // Set canvas size (standard certificate dimensions)
-        canvas.width = 1200;
-        canvas.height = 900;
+        // Set canvas size (standard certificate dimensions - A4 landscape ratio)
+        canvas.width = 1400;
+        canvas.height = 990;
         
-        // Create gradient background
-        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-        gradient.addColorStop(0, '#1e3a8a');
-        gradient.addColorStop(0.5, '#3b82f6');
-        gradient.addColorStop(1, '#1e40af');
+        // Create elegant paper background
+        const backgroundGradient = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, Math.max(canvas.width, canvas.height)/2);
+        backgroundGradient.addColorStop(0, '#fefefe');
+        backgroundGradient.addColorStop(0.7, '#f8f9fa');
+        backgroundGradient.addColorStop(1, '#e9ecef');
         
-        ctx.fillStyle = gradient;
+        ctx.fillStyle = backgroundGradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Add border
-        ctx.strokeStyle = '#fbbf24';
-        ctx.lineWidth = 12;
-        ctx.strokeRect(30, 30, canvas.width - 60, canvas.height - 60);
+        // Add subtle texture pattern
+        this.addPaperTexture(ctx, canvas.width, canvas.height);
         
-        // Inner border
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 4;
-        ctx.strokeRect(50, 50, canvas.width - 100, canvas.height - 100);
+        // Ornate border design
+        this.drawOrnamentBorder(ctx, canvas.width, canvas.height);
+        
+        // Institution header with crest
+        this.drawInstitutionHeader(ctx, canvas.width);
         
         // Certificate title
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 48px Arial, sans-serif';
+        ctx.fillStyle = '#1a365d';
+        ctx.font = 'bold 52px "Times New Roman", serif';
         ctx.textAlign = 'center';
-        ctx.fillText('CERTIFICATE OF ACHIEVEMENT', canvas.width / 2, 150);
+        ctx.fillText('CERTIFICATE OF EXCELLENCE', canvas.width / 2, 200);
         
-        // Subtitle
-        ctx.font = '24px Arial, sans-serif';
-        ctx.fillStyle = '#fbbf24';
-        ctx.fillText('Production ML Engineering Excellence', canvas.width / 2, 190);
+        // Decorative line under title
+        this.drawDecorativeLine(ctx, canvas.width / 2 - 200, 220, 400);
         
-        // Main text
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '32px Arial, sans-serif';
-        ctx.fillText('This certifies that', canvas.width / 2, 280);
+        // Presented to
+        ctx.fillStyle = '#2d3748';
+        ctx.font = 'italic 28px "Times New Roman", serif';
+        ctx.fillText('This is to certify that', canvas.width / 2, 280);
         
-        // Name
-        ctx.font = 'bold 42px Arial, sans-serif';
-        ctx.fillStyle = '#fbbf24';
+        // Recipient name with underline
+        ctx.fillStyle = '#1a365d';
+        ctx.font = 'bold 48px "Times New Roman", serif';
+        const nameMetrics = ctx.measureText(name);
         ctx.fillText(name, canvas.width / 2, 340);
         
-        // Achievement text
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '28px Arial, sans-serif';
-        ctx.fillText('has successfully demonstrated mastery of', canvas.width / 2, 400);
-        ctx.fillText('Production ML Engineering concepts by achieving', canvas.width / 2, 440);
+        // Elegant underline under name
+        ctx.strokeStyle = '#c6ab47';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(canvas.width / 2 - nameMetrics.width / 2 - 20, 355);
+        ctx.lineTo(canvas.width / 2 + nameMetrics.width / 2 + 20, 355);
+        ctx.stroke();
         
-        // Score
+        // Achievement description
+        ctx.fillStyle = '#2d3748';
+        ctx.font = '26px "Times New Roman", serif';
+        ctx.fillText('has successfully demonstrated exceptional proficiency in', canvas.width / 2, 400);
+        
+        // Subject matter
+        ctx.fillStyle = '#1a365d';
+        ctx.font = 'bold 32px "Times New Roman", serif';
+        ctx.fillText('PRODUCTION MACHINE LEARNING ENGINEERING', canvas.width / 2, 450);
+        
+        // Score achievement
         const percentage = Math.round((this.score / this.randomizedQuestions.length) * 100);
-        ctx.font = 'bold 36px Arial, sans-serif';
-        ctx.fillStyle = '#10b981';
-        ctx.fillText(`${percentage}% (${this.score}/${this.randomizedQuestions.length}) on the comprehensive quiz`, canvas.width / 2, 490);
+        ctx.fillStyle = '#2d3748';
+        ctx.font = '24px "Times New Roman", serif';
+        ctx.fillText('by achieving an outstanding score of', canvas.width / 2, 490);
         
-        // Skills covered
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '22px Arial, sans-serif';
-        ctx.fillText('Covering: Distributed Training • PEFT Techniques • Model Optimization • Architecture Design', canvas.width / 2, 550);
+        // Score highlight
+        ctx.fillStyle = '#c6ab47';
+        ctx.font = 'bold 36px "Times New Roman", serif';
+        ctx.fillText(`${percentage}% (${this.score}/${this.randomizedQuestions.length})`, canvas.width / 2, 530);
         
-        // GitHub handle
-        ctx.fillStyle = '#fbbf24';
-        ctx.font = 'bold 24px Arial, sans-serif';
-        ctx.fillText(`GitHub: @${github}`, canvas.width / 2, 600);
+        // Competencies
+        ctx.fillStyle = '#2d3748';
+        ctx.font = '20px "Times New Roman", serif';
+        ctx.fillText('on comprehensive assessment covering:', canvas.width / 2, 570);
         
-        // Date
-        const date = new Date().toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
+        // Skills list with bullet points
+        const skills = [
+            '• Advanced Distributed Training Architectures',
+            '• Parameter-Efficient Fine-Tuning Methodologies', 
+            '• Production Model Optimization Techniques',
+            '• MLOps Infrastructure & System Design'
+        ];
+        
+        ctx.fillStyle = '#1a365d';
+        ctx.font = '22px "Times New Roman", serif';
+        skills.forEach((skill, index) => {
+            ctx.fillText(skill, canvas.width / 2, 610 + (index * 30));
         });
-        ctx.fillStyle = '#cbd5e1';
-        ctx.font = '20px Arial, sans-serif';
-        ctx.fillText(`Completed on ${date}`, canvas.width / 2, 660);
         
-        // Footer
-        ctx.fillStyle = '#94a3b8';
-        ctx.font = '18px Arial, sans-serif';
-        ctx.fillText('Production ML Engineering Handbook', canvas.width / 2, 720);
-        ctx.fillText('github.com/tuanthi/distributed-llm-guide', canvas.width / 2, 750);
+        // GitHub credential
+        ctx.fillStyle = '#6b7280';
+        ctx.font = 'italic 20px "Times New Roman", serif';
+        ctx.fillText(`Professional Portfolio: github.com/${github}`, canvas.width / 2, 730);
         
-        // Add decorative elements
-        this.addCertificateDecorations(ctx, canvas.width, canvas.height);
+        // Date and signatures
+        this.drawSignatureSection(ctx, canvas.width, canvas.height);
+        
+        // Institution footer
+        this.drawInstitutionFooter(ctx, canvas.width, canvas.height);
+        
+        // Add institutional seal
+        this.drawInstitutionalSeal(ctx, canvas.width, canvas.height);
         
         // Display certificate
         this.displayCertificate(canvas, name, github, percentage);
     }
     
-    addCertificateDecorations(ctx, width, height) {
-        // Add some decorative stars
-        ctx.fillStyle = '#fbbf24';
-        const starPositions = [
-            [200, 120], [1000, 120], [150, 300], [1050, 300],
-            [180, 500], [1020, 500], [220, 700], [980, 700]
-        ];
-        
-        starPositions.forEach(([x, y]) => {
-            this.drawStar(ctx, x, y, 15);
-        });
-        
-        // Add ML icons (simplified representations)
-        ctx.strokeStyle = '#6366f1';
-        ctx.lineWidth = 3;
-        
-        // Neural network representation
-        const nodePositions = [
-            [120, 400], [120, 450], [120, 500],
-            [1080, 400], [1080, 450], [1080, 500]
-        ];
-        
-        nodePositions.forEach(([x, y]) => {
-            ctx.beginPath();
-            ctx.arc(x, y, 8, 0, 2 * Math.PI);
-            ctx.stroke();
-        });
+    addPaperTexture(ctx, width, height) {
+        // Add subtle paper texture
+        ctx.globalAlpha = 0.02;
+        for (let i = 0; i < 1000; i++) {
+            ctx.fillStyle = Math.random() > 0.5 ? '#000000' : '#ffffff';
+            ctx.fillRect(Math.random() * width, Math.random() * height, 1, 1);
+        }
+        ctx.globalAlpha = 1;
     }
     
-    drawStar(ctx, x, y, size) {
+    drawOrnamentBorder(ctx, width, height) {
+        const margin = 25;
+        const borderWidth = 15;
+        
+        // Outer border - elegant dark navy
+        ctx.strokeStyle = '#1a365d';
+        ctx.lineWidth = borderWidth;
+        ctx.strokeRect(margin, margin, width - 2 * margin, height - 2 * margin);
+        
+        // Inner border - gold accent
+        ctx.strokeStyle = '#c6ab47';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(margin + 20, margin + 20, width - 2 * (margin + 20), height - 2 * (margin + 20));
+        
+        // Corner ornaments
+        this.drawCornerOrnament(ctx, margin + 30, margin + 30, 50);
+        this.drawCornerOrnament(ctx, width - margin - 80, margin + 30, 50);
+        this.drawCornerOrnament(ctx, margin + 30, height - margin - 80, 50);
+        this.drawCornerOrnament(ctx, width - margin - 80, height - margin - 80, 50);
+    }
+    
+    drawCornerOrnament(ctx, x, y, size) {
         ctx.save();
         ctx.translate(x, y);
-        ctx.beginPath();
+        ctx.strokeStyle = '#c6ab47';
+        ctx.lineWidth = 2;
         
-        for (let i = 0; i < 5; i++) {
-            ctx.lineTo(Math.cos((18 + i * 72) * Math.PI / 180) * size, 
-                      -Math.sin((18 + i * 72) * Math.PI / 180) * size);
-            ctx.lineTo(Math.cos((54 + i * 72) * Math.PI / 180) * size * 0.5, 
-                      -Math.sin((54 + i * 72) * Math.PI / 180) * size * 0.5);
+        // Draw ornate corner design
+        ctx.beginPath();
+        ctx.moveTo(0, size);
+        ctx.quadraticCurveTo(size/3, size/3, size, 0);
+        ctx.moveTo(0, size/2);
+        ctx.quadraticCurveTo(size/4, size/4, size/2, 0);
+        ctx.stroke();
+        
+        // Add small decorative circles
+        ctx.fillStyle = '#c6ab47';
+        ctx.beginPath();
+        ctx.arc(size/4, size/4, 3, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.restore();
+    }
+    
+    drawInstitutionHeader(ctx, width) {
+        // Institution name
+        ctx.fillStyle = '#1a365d';
+        ctx.font = 'bold 28px "Times New Roman", serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('INSTITUTE OF ADVANCED MACHINE LEARNING', width / 2, 80);
+        
+        // Subtitle
+        ctx.fillStyle = '#6b7280';
+        ctx.font = 'italic 18px "Times New Roman", serif';
+        ctx.fillText('Center for Production AI Excellence', width / 2, 105);
+        
+        // Decorative emblems
+        this.drawAcademicEmblem(ctx, width / 2 - 250, 85);
+        this.drawAcademicEmblem(ctx, width / 2 + 250, 85);
+    }
+    
+    drawAcademicEmblem(ctx, x, y) {
+        ctx.save();
+        ctx.translate(x, y);
+        
+        // Shield outline
+        ctx.strokeStyle = '#c6ab47';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, -20);
+        ctx.lineTo(-15, -10);
+        ctx.lineTo(-15, 10);
+        ctx.lineTo(0, 20);
+        ctx.lineTo(15, 10);
+        ctx.lineTo(15, -10);
+        ctx.closePath();
+        ctx.stroke();
+        
+        // Inner design
+        ctx.fillStyle = '#1a365d';
+        ctx.beginPath();
+        ctx.arc(0, 0, 8, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Small decorative lines
+        ctx.strokeStyle = '#c6ab47';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(-8, -5);
+        ctx.lineTo(8, -5);
+        ctx.moveTo(-8, 5);
+        ctx.lineTo(8, 5);
+        ctx.stroke();
+        
+        ctx.restore();
+    }
+    
+    drawDecorativeLine(ctx, x, y, width) {
+        const centerX = x + width / 2;
+        
+        // Main line
+        ctx.strokeStyle = '#c6ab47';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + width, y);
+        ctx.stroke();
+        
+        // Center ornament
+        ctx.fillStyle = '#c6ab47';
+        ctx.beginPath();
+        ctx.arc(centerX, y, 6, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Side flourishes
+        this.drawFlourish(ctx, x - 20, y);
+        this.drawFlourish(ctx, x + width + 20, y);
+    }
+    
+    drawFlourish(ctx, x, y) {
+        ctx.strokeStyle = '#c6ab47';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x - 10, y);
+        ctx.quadraticCurveTo(x, y - 8, x + 10, y);
+        ctx.quadraticCurveTo(x, y + 8, x - 10, y);
+        ctx.stroke();
+    }
+    
+    drawSignatureSection(ctx, width, height) {
+        const y = height - 180;
+        const date = new Date().toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        
+        // Date
+        ctx.fillStyle = '#2d3748';
+        ctx.font = '18px "Times New Roman", serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('Date of Achievement:', 150, y);
+        ctx.font = 'bold 18px "Times New Roman", serif';
+        ctx.fillText(date, 150, y + 25);
+        
+        // Signature lines and titles
+        const sigY = y + 70;
+        
+        // Director signature
+        ctx.textAlign = 'center';
+        ctx.font = '16px "Times New Roman", serif';
+        ctx.fillStyle = '#6b7280';
+        
+        // Signature line
+        ctx.strokeStyle = '#2d3748';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(width - 400, sigY);
+        ctx.lineTo(width - 200, sigY);
+        ctx.stroke();
+        
+        ctx.fillText('Dr. Alexandra Chen', width - 300, sigY + 20);
+        ctx.fillText('Director, Institute of Advanced ML', width - 300, sigY + 40);
+        
+        // Authentication number
+        ctx.textAlign = 'left';
+        ctx.font = '14px "Times New Roman", serif';
+        ctx.fillStyle = '#9ca3af';
+        const certNumber = `IAML-${Date.now().toString(36).toUpperCase()}`;
+        ctx.fillText(`Certificate No: ${certNumber}`, 150, sigY + 40);
+    }
+    
+    drawInstitutionFooter(ctx, width, height) {
+        ctx.fillStyle = '#6b7280';
+        ctx.font = '14px "Times New Roman", serif';
+        ctx.textAlign = 'center';
+        
+        ctx.fillText('This certificate validates demonstrated competency in advanced machine learning engineering', width / 2, height - 80);
+        ctx.fillText('as assessed by the Institute of Advanced Machine Learning curriculum standards', width / 2, height - 60);
+        
+        // Website
+        ctx.fillStyle = '#9ca3af';
+        ctx.font = '12px "Times New Roman", serif';
+        ctx.fillText('github.com/tuanthi/distributed-llm-guide • Accredited Assessment Program', width / 2, height - 30);
+    }
+    
+    drawInstitutionalSeal(ctx, width, height) {
+        const sealX = width - 150;
+        const sealY = height - 250;
+        const radius = 60;
+        
+        ctx.save();
+        ctx.translate(sealX, sealY);
+        
+        // Outer circle
+        ctx.strokeStyle = '#c6ab47';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+        ctx.stroke();
+        
+        // Inner circle
+        ctx.strokeStyle = '#1a365d';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius - 15, 0, 2 * Math.PI);
+        ctx.stroke();
+        
+        // Center emblem
+        ctx.fillStyle = '#1a365d';
+        ctx.beginPath();
+        ctx.arc(0, 0, 20, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // ML symbol in center
+        ctx.strokeStyle = '#c6ab47';
+        ctx.lineWidth = 3;
+        ctx.font = 'bold 16px "Times New Roman", serif';
+        ctx.fillStyle = '#c6ab47';
+        ctx.textAlign = 'center';
+        ctx.fillText('ML', 0, 6);
+        
+        // Radiating lines
+        ctx.strokeStyle = '#c6ab47';
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 8; i++) {
+            const angle = (i * Math.PI) / 4;
+            ctx.beginPath();
+            ctx.moveTo(Math.cos(angle) * 30, Math.sin(angle) * 30);
+            ctx.lineTo(Math.cos(angle) * 45, Math.sin(angle) * 45);
+            ctx.stroke();
         }
         
-        ctx.closePath();
-        ctx.fill();
+        // Seal text
+        ctx.fillStyle = '#6b7280';
+        ctx.font = 'bold 10px "Times New Roman", serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('EXCELLENCE', 0, -70);
+        ctx.fillText('VERIFIED', 0, 80);
+        
         ctx.restore();
     }
     
@@ -710,18 +936,22 @@ class QuizApp {
     }
     
     shareCertificate(name, github, percentage) {
-        const text = `🎉 I just earned a Production ML Engineering Certificate with ${percentage}% on the comprehensive quiz! 
+        const text = `🎓 Proud to announce: I've earned an official Certificate of Excellence from the Institute of Advanced Machine Learning!
 
-Skills validated:
-✅ Distributed Training (DDP, FSDP)
-✅ PEFT Techniques (LoRA, QLoRA)
-✅ Model Optimization
-✅ MLOps Architecture
+🏆 Achievement: ${percentage}% score on comprehensive Production ML Engineering assessment
 
-Check out the handbook: https://tuanthi.github.io/distributed-llm-guide/
-Take the quiz: https://tuanthi.github.io/distributed-llm-guide/quiz/
+📋 Verified competencies:
+✅ Advanced Distributed Training Architectures
+✅ Parameter-Efficient Fine-Tuning Methodologies  
+✅ Production Model Optimization Techniques
+✅ MLOps Infrastructure & System Design
 
-#MachineLearning #MLOps #AI #ProductionML #DistributedTraining`;
+This accredited certification validates my expertise in large-scale ML engineering and production deployment strategies.
+
+🔗 Handbook: https://tuanthi.github.io/distributed-llm-guide/
+🧠 Take the assessment: https://tuanthi.github.io/distributed-llm-guide/quiz/
+
+#MachineLearning #MLOps #AI #ProductionML #DistributedTraining #MLEngineering #Certification #CareerDevelopment`;
         
         if (navigator.share) {
             navigator.share({
