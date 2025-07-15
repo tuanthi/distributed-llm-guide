@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Production ML Engineering Quiz - Test Your Knowledge</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <header class="quiz-header">
+            <h1><i class="fas fa-brain"></i> Production ML Engineering Quiz</h1>
+            <p class="subtitle">Test your knowledge of large-scale ML training, optimization, and deployment</p>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-text" id="progressText">Question 1 of 10</span>
+            </div>
+        </header>
+
+        <main class="quiz-content">
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="screen active">
+                <div class="welcome-card">
+                    <h2>🚀 Welcome to the Production ML Engineering Quiz!</h2>
+                    <div class="quiz-info">
+                        <div class="info-item">
+                            <i class="fas fa-question-circle"></i>
+                            <span><strong>10 Questions</strong> covering distributed training, PEFT, and optimization</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <span><strong>No time limit</strong> - take your time to think</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-lightbulb"></i>
+                            <span><strong>Detailed explanations</strong> for every answer</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-code"></i>
+                            <span><strong>Mix of concepts and code</strong> from the handbook</span>
+                        </div>
+                    </div>
+                    <button id="startQuiz" class="btn btn-primary">
+                        <i class="fas fa-play"></i> Start Quiz
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Screen -->
+            <div id="quizScreen" class="screen">
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number" id="questionNumber">Question 1</span>
+                        <span class="question-type" id="questionType">Multiple Choice</span>
+                    </div>
+                    
+                    <div class="question-content">
+                        <h3 id="questionText">Question will appear here...</h3>
+                        <div id="questionCode" class="code-block hidden"></div>
+                        <div id="questionDiagram" class="diagram-container hidden"></div>
+                    </div>
+
+                    <div id="answerOptions" class="answer-options">
+                        <!-- Answer options will be dynamically generated -->
+                    </div>
+
+                    <div class="question-actions">
+                        <button id="prevBtn" class="btn btn-secondary" disabled>
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </button>
+                        <button id="nextBtn" class="btn btn-primary" disabled>
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Screen -->
+            <div id="resultsScreen" class="screen">
+                <div class="results-card">
+                    <div class="score-display">
+                        <div class="score-circle">
+                            <span class="score-number" id="finalScore">8</span>
+                            <span class="score-total">/10</span>
+                        </div>
+                        <h2 id="scoreTitle">Excellent Work!</h2>
+                        <p id="scoreMessage">You have a solid understanding of production ML engineering.</p>
+                    </div>
+
+                    <div class="results-breakdown">
+                        <h3>📊 Performance Breakdown</h3>
+                        <div class="breakdown-grid" id="breakdownGrid">
+                            <!-- Results breakdown will be generated -->
+                        </div>
+                    </div>
+
+                    <div class="results-actions">
+                        <button id="reviewAnswers" class="btn btn-secondary">
+                            <i class="fas fa-eye"></i> Review Answers
+                        </button>
+                        <button id="retakeQuiz" class="btn btn-primary">
+                            <i class="fas fa-redo"></i> Retake Quiz
+                        </button>
+                        <a href="https://github.com/tuanthi/distributed-llm-guide" class="btn btn-outline" target="_blank">
+                            <i class="fab fa-github"></i> View Handbook
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Screen -->
+            <div id="reviewScreen" class="screen">
+                <div class="review-header">
+                    <h2><i class="fas fa-clipboard-check"></i> Answer Review</h2>
+                    <button id="backToResults" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Results
+                    </button>
+                </div>
+                <div id="reviewContent" class="review-content">
+                    <!-- Review content will be generated -->
+                </div>
+            </div>
+        </main>
+
+        <footer class="quiz-footer">
+            <p>Based on the <a href="https://github.com/tuanthi/distributed-llm-guide" target="_blank">Production ML Engineering Handbook</a></p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="quiz-data.js"></script>
+    <script src="quiz-app.js"></script>
+</body>
+</html>
