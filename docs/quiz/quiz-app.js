@@ -571,7 +571,7 @@ class QuizApp {
         // Subject matter
         ctx.fillStyle = '#1a365d';
         ctx.font = 'bold 32px "Times New Roman", serif';
-        ctx.fillText('PRODUCTION MACHINE LEARNING ENGINEERING', canvas.width / 2, 450);
+        ctx.fillText('DISTRIBUTED LLM TRAINING & SERVING EXPERT', canvas.width / 2, 450);
         
         // Score achievement
         const percentage = Math.round((this.score / this.randomizedQuestions.length) * 100);
@@ -591,10 +591,10 @@ class QuizApp {
         
         // Skills list with bullet points
         const skills = [
-            '• Advanced Distributed Training Architectures',
-            '• Parameter-Efficient Fine-Tuning Methodologies', 
-            '• Production Model Optimization Techniques',
-            '• MLOps Infrastructure & System Design'
+            '• Multi-GPU & Multi-Node LLM Training (DDP, FSDP, DeepSpeed)',
+            '• Parameter-Efficient Fine-Tuning (LoRA, QLoRA, AdaLoRA)', 
+            '• LLM Optimization & Quantization Techniques',
+            '• High-Performance LLM Serving & Deployment'
         ];
         
         ctx.fillStyle = '#1a365d';
@@ -940,26 +940,26 @@ class QuizApp {
     }
     
     shareCertificate(name, github, percentage) {
-        const text = `🎓 Proud to announce: I've earned an official Certificate of Excellence from Advanced Machine Learning for Production!
+        const text = `🎓 Proud to announce: I've earned an official Certificate of Excellence as a Distributed LLM Training & Serving Expert!
 
-🏆 Achievement: ${percentage}% score on comprehensive Production ML Engineering assessment
+🏆 Achievement: ${percentage}% score on comprehensive LLM engineering assessment by Advanced Machine Learning for Production
 
 📋 Verified competencies:
-✅ Advanced Distributed Training Architectures
-✅ Parameter-Efficient Fine-Tuning Methodologies  
-✅ Production Model Optimization Techniques
-✅ MLOps Infrastructure & System Design
+✅ Multi-GPU & Multi-Node LLM Training (DDP, FSDP, DeepSpeed)
+✅ Parameter-Efficient Fine-Tuning (LoRA, QLoRA, AdaLoRA)
+✅ LLM Optimization & Quantization Techniques
+✅ High-Performance LLM Serving & Deployment
 
-This accredited certification validates my expertise in large-scale ML engineering and production deployment strategies.
+This accredited certification validates my expertise in distributed LLM training and production deployment at scale.
 
 🔗 Handbook: https://tuanthi.github.io/distributed-llm-guide/
 🧠 Take the assessment: https://tuanthi.github.io/distributed-llm-guide/quiz/
 
-#MachineLearning #MLOps #AI #ProductionML #DistributedTraining #MLEngineering #Certification #CareerDevelopment`;
+#LLM #DistributedTraining #LLMOps #AI #LargeLanguageModels #DeepLearning #FSDP #LoRA #Certification #LLMEngineering`;
         
         if (navigator.share) {
             navigator.share({
-                title: 'Production ML Engineering Certificate',
+                title: 'Distributed LLM Training & Serving Expert Certificate',
                 text: text,
                 url: 'https://tuanthi.github.io/distributed-llm-guide/quiz/'
             });
