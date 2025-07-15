@@ -617,9 +617,6 @@ class QuizApp {
         // Add institutional seal
         this.drawInstitutionalSeal(ctx, canvas.width, canvas.height);
         
-        // Add quiz link box
-        this.drawQuizLinkBox(ctx, canvas.width, canvas.height);
-        
         // Display certificate
         this.displayCertificate(canvas, name, github, percentage);
     }
@@ -879,79 +876,6 @@ class QuizApp {
         ctx.fillText('VERIFIED', 0, 80);
         
         ctx.restore();
-    }
-    
-    drawQuizLinkBox(ctx, width, height) {
-        // Position the box on the left side to balance with the seal
-        const boxX = 100;
-        const boxY = height - 280;
-        const boxWidth = 320;
-        const boxHeight = 120;
-        
-        // Draw bordered box
-        ctx.strokeStyle = '#c6ab47';
-        ctx.lineWidth = 2;
-        ctx.fillStyle = '#fefef4';
-        ctx.beginPath();
-        ctx.rect(boxX, boxY, boxWidth, boxHeight);
-        ctx.fill();
-        ctx.stroke();
-        
-        // Add inner border
-        ctx.strokeStyle = '#1a365d';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.rect(boxX + 10, boxY + 10, boxWidth - 20, boxHeight - 20);
-        ctx.stroke();
-        
-        // Add content
-        ctx.fillStyle = '#1a365d';
-        ctx.font = 'bold 18px "Times New Roman", serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('TAKE THE ASSESSMENT', boxX + boxWidth/2, boxY + 35);
-        
-        // Quiz icon
-        ctx.font = '24px Arial';
-        ctx.fillText('🎯', boxX + boxWidth/2, boxY + 65);
-        
-        // URL
-        ctx.fillStyle = '#c6ab47';
-        ctx.font = 'bold 14px "Times New Roman", serif';
-        ctx.fillText('tuanthi.github.io/', boxX + boxWidth/2, boxY + 90);
-        ctx.fillText('distributed-llm-guide/quiz', boxX + boxWidth/2, boxY + 108);
-        
-        // Add decorative corners
-        ctx.strokeStyle = '#c6ab47';
-        ctx.lineWidth = 2;
-        const cornerSize = 15;
-        
-        // Top-left corner
-        ctx.beginPath();
-        ctx.moveTo(boxX, boxY + cornerSize);
-        ctx.lineTo(boxX, boxY);
-        ctx.lineTo(boxX + cornerSize, boxY);
-        ctx.stroke();
-        
-        // Top-right corner
-        ctx.beginPath();
-        ctx.moveTo(boxX + boxWidth - cornerSize, boxY);
-        ctx.lineTo(boxX + boxWidth, boxY);
-        ctx.lineTo(boxX + boxWidth, boxY + cornerSize);
-        ctx.stroke();
-        
-        // Bottom-left corner
-        ctx.beginPath();
-        ctx.moveTo(boxX, boxY + boxHeight - cornerSize);
-        ctx.lineTo(boxX, boxY + boxHeight);
-        ctx.lineTo(boxX + cornerSize, boxY + boxHeight);
-        ctx.stroke();
-        
-        // Bottom-right corner
-        ctx.beginPath();
-        ctx.moveTo(boxX + boxWidth - cornerSize, boxY + boxHeight);
-        ctx.lineTo(boxX + boxWidth, boxY + boxHeight);
-        ctx.lineTo(boxX + boxWidth, boxY + boxHeight - cornerSize);
-        ctx.stroke();
     }
     
     displayCertificate(canvas, name, github, percentage) {
