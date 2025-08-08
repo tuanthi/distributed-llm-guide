@@ -1,6 +1,60 @@
 # The Complete Production ML Engineering Handbook
 *A Comprehensive Guide to Large-Scale Model Training, Optimization, and Deployment*
 
+<div align="center">
+
+[![Quiz](https://img.shields.io/badge/🎯_Take_the_Quiz-Test_Your_Knowledge-blue?style=for-the-badge)](https://tuanthi.github.io/distributed-llm-guide/)
+[![Chapters](https://img.shields.io/badge/📚_21_Chapters-Complete-green?style=for-the-badge)](#-table-of-contents)
+[![Code Examples](https://img.shields.io/badge/💻_Working_Code-Production_Ready-orange?style=for-the-badge)](#-what-youll-master)
+
+</div>
+
+---
+
+## 🚀 Welcome to the Ultimate Production ML Engineering Resource
+
+Are you ready to master the art of building, optimizing, and deploying machine learning systems at scale? This comprehensive handbook transforms you from an ML practitioner into a **production ML engineering expert** capable of:
+
+- 🔥 **Training billion-parameter models** across 100+ GPUs with advanced distributed strategies
+- ⚡ **Achieving <50ms inference latency** through hardware-specific optimizations
+- 💰 **Reducing costs by 60%** using efficient training and serving techniques
+- 🛡️ **Building systems with 99.9% uptime** using production-grade deployment patterns
+- 📊 **Scaling from 0 to 10,000+ QPS** with intelligent auto-scaling
+
+### 🎯 Test Your Knowledge
+
+**[Take the Distributed LLM Training & Serving Quiz](https://tuanthi.github.io/distributed-llm-guide/)** - A comprehensive 100-question assessment covering all aspects of production ML engineering. Perfect for:
+- 📝 Validating your understanding of distributed training concepts
+- 🎓 Preparing for ML engineering interviews
+- 📈 Identifying areas for deeper study
+- 🏆 Earning your certificate of completion
+
+### 📖 What Makes This Handbook Special?
+
+Unlike theoretical guides, every concept in this handbook is backed by **production-tested code** that you can immediately apply to your projects. We cover the entire ML lifecycle:
+
+1. **Foundation to Advanced** - Start with environment setup and progress to complex distributed systems
+2. **Real-World Focus** - Learn from actual production deployments handling millions of users
+3. **Complete Code Examples** - Every chapter includes working implementations you can run
+4. **Cloud-Native Solutions** - Azure ML, Kubernetes, and modern MLOps practices
+5. **Performance Obsessed** - Optimization techniques that deliver 8x+ speedups
+
+### 🎓 Who Should Read This?
+
+- **ML Engineers** looking to scale their models to production
+- **Data Scientists** wanting to understand deployment and optimization
+- **DevOps Engineers** working with ML workloads
+- **Technical Leaders** architecting ML platforms
+- **Students** preparing for ML engineering roles
+
+### 💡 How to Use This Handbook
+
+1. **Sequential Learning**: Start with Chapters 1-3 for foundations, then progress through each section
+2. **Reference Guide**: Jump to specific chapters based on your current challenges
+3. **Hands-On Practice**: Run the code examples in your environment
+4. **Quiz Assessment**: Test your knowledge with our comprehensive quiz
+5. **Production Implementation**: Apply techniques directly to your projects
+
 ---
 
 ## 📚 Table of Contents
